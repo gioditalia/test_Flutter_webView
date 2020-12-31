@@ -6,12 +6,12 @@
         <h1 id="title">Hello World!</h1>
         <script type = "text/javascript">
             function fromFlutter(newTitle){
-                document.getElementById(title).innerHTML = newTitle;
+                document.getElementById("title").innerHTML = newTitle;
                 sendBack();
             }
 
-            function sendBack(){
-                messageHandler.postMessage("Hello from JS");
+            function sendBack(echo){
+                messageHandler.postMessage(echo);
             }
         </script>
     </body>

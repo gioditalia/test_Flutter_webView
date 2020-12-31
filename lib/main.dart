@@ -34,16 +34,33 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   WebViewController _controller;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(title: Text('Webview')),
       body: WebView(
         initialUrl: 'about:blank',
+        javascriptMode: JavascriptMode.unrestricted,
+        javascriptChannels: Set.from([
+          JavascriptChannel(
+              name: 'messageHandler',
+              onMessageReceived: (JavascriptMessage message) {
+                _scaffoldKey.currentState
+                    .showSnackBar(SnackBar(content: Text(message.message)));
+              })
+        ]),
         onWebViewCreated: (WebViewController webviewController) {
           _controller = webviewController;
           _loadHtmlFromAssets();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.send),
+        onPressed: () {
+          _controller.evaluateJavascript('fromFlutter("echo Message")');
         },
       ),
     );
